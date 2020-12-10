@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties>
+        <property name="metrics.enabled" value="true"/>
+        <property name="r2dbc.pool.initial-size" value="1"/>
+        <property name="r2dbc.pool.max-size" value="10"/>
+        <!-- max idle time, the unit is Minute-->
+        <property name="r2dbc.pool.max-idle-time" value="5"/>
+    </properties>
+    <typeHandlers>
+        <!-- Enum ordinal type handler-->
+        <typeHandler handler="org.apache.ibatis.r2dbc.type.EnumOrdinalTypeHandler"
+                     javaType="java.math.RoundingMode"/>
+    </typeHandlers>
+    <!--<mappers>
+        <mapper class="org.mybatis.builder.AuthorReactiveMapper"/>
+    </mappers>-->
+    <mappers>
+        <mapper resource="mybatis/CodeDictMapper.xml"/>
+    </mappers>
+</configuration>
