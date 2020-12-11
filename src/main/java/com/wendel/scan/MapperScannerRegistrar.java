@@ -54,8 +54,42 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 //
 //        this.registerBeanDefinitions(mapperScanAttrs, registry);
 //    }
-//
 
+
+
+    @Override
+    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+        AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(MapperScan.class.getName()));
+        //ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
+        SqlMapperScanner scanner = new SqlMapperScanner(registry);
+
+        // this check is needed in Spring 3.1
+        if (resourceLoader != null) {
+            scanner.setResourceLoader(resourceLoader);
+        }
+
+        Class<? extends BeanNameGenerator> generatorClass = annoAttrs.getClass("nameGenerator");
+        if (!BeanNameGenerator.class.equals(generatorClass)) {
+            scanner.setBeanNameGenerator(BeanUtils.instantiateClass(generatorClass));
+        }
+
+        List<String> basePackages = new ArrayList<String>();
+        for (String pkg : annoAttrs.getStringArray("value")) {
+            if (StringUtils.hasText(pkg)) {
+                basePackages.add(pkg);
+            }
+        }
+        for (String pkg : annoAttrs.getStringArray("basePackages")) {
+            if (StringUtils.hasText(pkg)) {
+                basePackages.add(pkg);
+            }
+        }
+        for (Class<?> clazz : annoAttrs.getClassArray("basePackageClasses")) {
+            basePackages.add(ClassUtils.getPackageName(clazz));
+        }
+        scanner.registerFilters();
+        scanner.doScan(StringUtils.toStringArray(basePackages));
+    }
 
 //    @Override
 //    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
@@ -91,39 +125,4 @@ public class MapperScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 //        scanner.registerFilters();
 //        scanner.doScan(StringUtils.toStringArray(basePackages));
 //    }
-
-    @Override
-    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(MapperScan.class.getName()));
-        //ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
-        SqlMapperScanner scanner = new SqlMapperScanner(registry);
-
-        // this check is needed in Spring 3.1
-        if (resourceLoader != null) {
-            scanner.setResourceLoader(resourceLoader);
-        }
-
-        Class<? extends BeanNameGenerator> generatorClass = annoAttrs.getClass("nameGenerator");
-        if (!BeanNameGenerator.class.equals(generatorClass)) {
-            scanner.setBeanNameGenerator(BeanUtils.instantiateClass(generatorClass));
-        }
-
-
-        List<String> basePackages = new ArrayList<String>();
-        for (String pkg : annoAttrs.getStringArray("value")) {
-            if (StringUtils.hasText(pkg)) {
-                basePackages.add(pkg);
-            }
-        }
-        for (String pkg : annoAttrs.getStringArray("basePackages")) {
-            if (StringUtils.hasText(pkg)) {
-                basePackages.add(pkg);
-            }
-        }
-        for (Class<?> clazz : annoAttrs.getClassArray("basePackageClasses")) {
-            basePackages.add(ClassUtils.getPackageName(clazz));
-        }
-        scanner.registerFilters();
-        scanner.doScan(StringUtils.toStringArray(basePackages));
-    }
 }

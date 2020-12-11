@@ -27,4 +27,4 @@ logging:
     root: INFO
     com.wendel: DEBUG
     org.springframework.data.r2dbc: DEBUG
-    com.alibaba.nacos.client.config: OFF
+    org.apache.ibatis.r2dbc: DEBUG

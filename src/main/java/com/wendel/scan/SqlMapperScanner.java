@@ -37,7 +37,7 @@ public class SqlMapperScanner extends ClassPathBeanDefinitionScanner {
             constructorArgumentValues.addIndexedArgumentValue(0, definition.getBeanClassName());
             definition.getConstructorArgumentValues().addArgumentValues(constructorArgumentValues);
             // 设置自己的工厂类
-            //definition.setBeanClass(SqlFactoryBean.class);
+            definition.setBeanClass(SqlFactoryBean.class);
         }
         return beanDefinitions;
     }
