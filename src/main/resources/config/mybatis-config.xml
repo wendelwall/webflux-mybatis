@@ -16,7 +16,7 @@
     <!--<mappers>
         <mapper class="org.mybatis.builder.AuthorReactiveMapper"/>
     </mappers>-->
-    <mappers>
+    <!--<mappers>
         <mapper resource="mybatis/CodeDictMapper.xml"/>
-    </mappers>
+    </mappers>-->
 </configuration>

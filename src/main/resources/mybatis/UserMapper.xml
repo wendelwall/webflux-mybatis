@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wendel.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.wendel.entity.User">
+        <id column="ID" jdbcType="CHAR" property="id"/>
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+        <result column="POSITION" jdbcType="VARCHAR" property="position"/>
+        <result column="MOBILE" jdbcType="VARCHAR" property="mobile"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="STATUS" jdbcType="CHAR" property="status"/>
+        <result column="GENDER" jdbcType="CHAR" property="gender"/>
+        <result column="CARD_TYPE" jdbcType="VARCHAR" property="cardType"/>
+        <result column="CARD_ID" jdbcType="VARCHAR" property="cardId"/>
+        <result column="BIRTHDAY" jdbcType="DATE" property="birthday"/>
+        <result column="EMAIL" jdbcType="VARCHAR" property="email"/>
+        <result column="PROVINCE" jdbcType="VARCHAR" property="province"/>
+        <result column="PROVINCE_NAME" jdbcType="VARCHAR" property="provinceName"/>
+        <result column="CITY" jdbcType="VARCHAR" property="city"/>
+        <result column="CITY_NAME" jdbcType="VARCHAR" property="cityName"/>
+        <result column="DISTRICT" jdbcType="VARCHAR" property="district"/>
+        <result column="DISTRICT_NAME" jdbcType="VARCHAR" property="districtName"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+        <result column="EXT_1" jdbcType="VARCHAR" property="ext1"/>
+        <result column="EXT_2" jdbcType="VARCHAR" property="ext2"/>
+        <result column="EXT_3" jdbcType="VARCHAR" property="ext3"/>
+        <result column="EXT_4" jdbcType="VARCHAR" property="ext4"/>
+        <result column="EXT_5" jdbcType="VARCHAR" property="ext5"/>
+        <result column="DEPARTMENT" jdbcType="VARCHAR" property="department"/>
+        <result column="IS_MARKETING" jdbcType="VARCHAR" property="isMarketing"/>
+        <result column="MARKETING_CODE" jdbcType="VARCHAR" property="marketingCode"/>
+        <result column="BATCH_ID" jdbcType="VARCHAR" property="batchId"/>
+        <result column="INSERT_USER" jdbcType="VARCHAR" property="insertUser"/>
+        <result column="INSERT_TIME" jdbcType="TIMESTAMP" property="insertTime"/>
+        <result column="UPDATE_USER" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="DELETE_FLAG" jdbcType="BIT" property="deleteFlag"/>
+    </resultMap>
+    <select id="findByUsername" resultMap="BaseResultMap">
+        select * from t_user where DELETE_FLAG=false and status = '1'
+        <choose>
+            <when test='type == "2"'>
+                and MOBILE = #{userName}
+            </when>
+            <when test='type == "3"'>
+                and EMAIL = #{userName}
+            </when>
+            <otherwise>
+                and USER_NAME = #{userName}
+            </otherwise>
+        </choose>
+        ORDER BY INSERT_TIME DESC LIMIT 1
+    </select>
+
+    <resultMap id="UserDtoResultMap" type="com.wendel.model.dto.UserDto" extends="BaseResultMap">
+    </resultMap>
+    <select id="getByPageList" parameterType="com.wendel.model.vo.UserListVo" resultMap="UserDtoResultMap">
+        select u.* from t_user u where u.DELETE_FLAG=FALSE
+        <if test="vo.id != null and vo.id != ''">
+            and u.ID = #{vo.id}
+        </if>
+        <if test="vo.name != null and vo.name != ''">
+            and u.name like concat('%', #{vo.name}, '%')
+        </if>
+        <if test="vo.mobile != null and vo.mobile != ''">
+            and u.MOBILE like concat('%', #{vo.mobile}, '%')
+        </if>
+        order by u.INSERT_TIME desc limit #{vo.pageIndex}, #{vo.pageSize}
+    </select>
+
+    <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select u.* from t_user u where u.DELETE_FLAG=FALSE and u.ID = #{id}
+    </select>
+
+    <insert id="saveOrUpdate" parameterType="java.util.List">
+      INSERT INTO `t_user`(`ID`, `USER_NAME`, `POSITION`, `MOBILE`, `PASSWORD`,
+        `NAME`, `STATUS`, `GENDER`, `CARD_TYPE`, `CARD_ID`, `BIRTHDAY`, `EMAIL`, `DEPARTMENT`,
+        `IS_MARKETING`, `MARKETING_CODE`, `BATCH_ID`, `PROVINCE`, `PROVINCE_NAME`, `CITY`,
+          `CITY_NAME`, `DISTRICT`, `DISTRICT_NAME`, `ADDRESS`,
+          `EXT_1`, `EXT_2`, `EXT_3`, `EXT_4`, `EXT_5`, `INSERT_USER`, `INSERT_TIME`, `UPDATE_USER`, `UPDATE_TIME`, `DELETE_FLAG`)
+      VALUES
+          (#{userVo.id},
+          #{userVo.userName},
+          #{userVo.position},
+          #{userVo.mobile},
+          #{userVo.password},
+          #{userVo.name},
+          #{userVo.status},
+          #{userVo.gender},
+          #{userVo.cardType},
+          #{userVo.cardId},
+          #{userVo.birthday},
+          #{userVo.email},
+          #{userVo.department},
+          #{userVo.isMarketing},
+          #{userVo.marketingCode},
+          #{userVo.batchId},
+          #{userVo.province},
+          #{userVo.provinceName},
+          #{userVo.city},
+          #{userVo.cityName},
+          #{userVo.district},
+          #{userVo.districtName},
+          #{userVo.address},
+          #{userVo.ext1},
+          #{userVo.ext2},
+          #{userVo.ext3},
+          #{userVo.ext4},
+          #{userVo.ext5},
+          #{userVo.insertUser},
+          #{userVo.insertTime},
+          #{userVo.updateUser},
+          #{userVo.updateTime},
+          #{userVo.deleteFlag})
+      ON DUPLICATE KEY UPDATE
+      `UPDATE_TIME`=now(),UPDATE_USER=VALUES(UPDATE_USER),
+      `USER_NAME`=VALUES(`USER_NAME`),
+      `MOBILE`=VALUES(`MOBILE`),
+      `PASSWORD`=VALUES(`PASSWORD`),
+      `NAME`=VALUES(`NAME`),
+      `CARD_TYPE`=VALUES(`CARD_TYPE`),
+      `NAME`=VALUES(`NAME`),
+      `EMAIL`=VALUES(`EMAIL`),
+      `IS_MARKETING`=VALUES(`IS_MARKETING`),
+      `MARKETING_CODE`=VALUES(`MARKETING_CODE`)
+  </insert>
+  <delete id="deleteById">
+    DELETE FROM t_user WHERE ID = #{id}
+  </delete>
+</mapper>
