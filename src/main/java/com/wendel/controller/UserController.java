@@ -1,6 +1,5 @@
 package com.wendel.controller;
 
-import com.wendel.entity.User;
 import com.wendel.model.dto.UserDto;
 import com.wendel.model.vo.UserListVo;
 import com.wendel.model.vo.UserVo;
@@ -33,7 +32,7 @@ public class UserController {
      * @return
      */
     @GetMapping
-    public Flux<UserDto> getByPageList(@ModelAttribute @Validated UserListVo vo){
+    public Flux<UserDto> getByPageList(@ModelAttribute @Validated Mono<UserListVo> vo){
         return userService.getByPageList(vo);
     }
 
@@ -43,7 +42,7 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public Mono<Integer> create(@RequestBody @Valid UserVo vo){
+    public Mono<Result<Void>> create(@RequestBody @Valid Mono<UserVo> vo){
         return userService.create(vo);
     }
 
@@ -53,7 +52,7 @@ public class UserController {
      * @return
      */
     @PutMapping
-    public Mono<User> update(@RequestBody @Valid UserVo vo){
+    public Mono<Result<Void>> update(@RequestBody @Valid Mono<UserVo> vo){
         return userService.update(vo);
     }
 
@@ -63,7 +62,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping(value = "/{id}/id")
-    public Mono<Result> delete(@PathVariable String id){
+    public Mono<Result<Void>> delete(@PathVariable String id){
         return userService.delete(id);
     }
     

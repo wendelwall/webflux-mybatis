@@ -33,42 +33,64 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Flux<UserDto> getByPageList(UserListVo vo) {
-        return userMapper.getByPageList(vo);
+    public Flux<UserDto> getByPageList(Mono<UserListVo> vo) {
+        return vo.flux().flatMap(p -> userMapper.getByPageList(p));
     }
 
     /**
      * 创建用户
-     * @param vo
+     * @param userVo
      * @return
      */
     @Override
-    public Mono<Integer> create(UserVo vo) {
-        User user = new User();
-        BeanUtils.copyProperties(vo, user);
-        user.setStatus("1");
-        if(StringUtils.isNotBlank(vo.getPassword())){
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String password = passwordEncoder.encode(vo.getPassword());
-            user.setPassword(password);
-        }
-        user.buildForInsert();
-        return userMapper.saveOrUpdate(user);
+    public Mono<Result<Void>> create(Mono<UserVo> userVo) {
+        return userVo.flatMap(vo -> {
+            User user = new User();
+            BeanUtils.copyProperties(vo, user);
+            user.setStatus("1");
+            if(StringUtils.isNotBlank(vo.getPassword())){
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String password = passwordEncoder.encode(vo.getPassword());
+                user.setPassword(password);
+            }
+            user.buildForInsert();
+            return userMapper.saveOrUpdate(user);
+        }).doOnError(p -> Result.ofSystemError(p.getMessage()))
+                .map(p -> Result.ofSuccess(null));
+
     }
 
+    /**
+     * 修改用户
+     * @param userVo
+     * @return
+     */
     @Override
-    public Mono<User> update(UserVo vo) {
-        return userMapper.getById(vo.getId()).doOnNext(p -> {
-            p.setUserName(vo.getUserName());
-            p.setPassword(vo.getPassword());
-            p.setMobile(vo.getMobile());
-            p.setEmail(vo.getEmail());
-            userMapper.saveOrUpdate(p).subscribe();
-        });
+    public Mono<Result<Void>> update(Mono<UserVo> userVo) {
+        return userVo.zipWhen(p -> userMapper.getById(p.getId()), (vo, user) -> {
+            user.setUserName(vo.getUserName());
+            if(StringUtils.isNotBlank(vo.getPassword())){
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String password = passwordEncoder.encode(vo.getPassword());
+                user.setPassword(password);
+            }
+            user.setMobile(vo.getMobile());
+            user.setEmail(vo.getEmail());
+            return user;
+        }).flatMap(p -> userMapper.saveOrUpdate(p))
+                .doOnError(p -> Result.ofSystemError(p.getMessage()))
+                .map(p -> Result.ofSuccess(null));
     }
 
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
     @Override
-    public Mono<Result> delete(String id) {
-        return userMapper.deleteById(id).doOnError(p -> Result.ofSystemError(p.getMessage())).map(p -> Result.ofSuccess(null));
+    public Mono<Result<Void>> delete(String id) {
+        return userMapper.deleteById(id)
+                .doOnError(p -> Result.ofSystemError(p.getMessage()))
+                .map(p -> Result.ofSuccess(null));
     }
 }

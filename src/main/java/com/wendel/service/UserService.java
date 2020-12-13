@@ -1,6 +1,5 @@
 package com.wendel.service;
 
-import com.wendel.entity.User;
 import com.wendel.model.dto.UserDto;
 import com.wendel.model.vo.UserListVo;
 import com.wendel.model.vo.UserVo;
@@ -21,27 +20,27 @@ public interface UserService {
      * @param vo
      * @return
      */
-    Flux<UserDto> getByPageList(UserListVo vo);
+    Flux<UserDto> getByPageList(Mono<UserListVo> vo);
 
     /**
      * 创建用户
-     * @param vo
+     * @param userVo
      * @return
      */
-    Mono<Integer> create(UserVo vo);
+    Mono<Result<Void>> create(Mono<UserVo> userVo);
 
     /**
      * 修改用户
      * @param vo
      * @return
      */
-    Mono<User> update(UserVo vo);
+    Mono<Result<Void>> update(Mono<UserVo> vo);
 
     /**
      * 删除用户
      * @param id
      * @return
      */
-    Mono<Result> delete(String id);
+    Mono<Result<Void>> delete(String id);
 
 }
