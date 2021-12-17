@@ -65,7 +65,6 @@
         <if test="vo.mobile != null and vo.mobile != ''">
             and u.MOBILE like concat('%', #{vo.mobile}, '%')
         </if>
-        order by u.INSERT_TIME desc limit #{vo.pageIndex}, #{vo.pageSize}
     </select>
 
     <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">

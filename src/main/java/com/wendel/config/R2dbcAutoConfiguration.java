@@ -27,10 +27,7 @@ import java.math.RoundingMode;
 @Configuration
 public class R2dbcAutoConfiguration{
     @Bean
-    public ReactiveSqlSessionFactory reactiveSqlSessionFactory(ConnectionFactory connectionFactory)  {
-//        XMLConfigBuilder xmlConfigBuilder = new XMLConfigBuilder(this.getClass().getResourceAsStream("/config/mybatis-config.xml"));
-//        org.apache.ibatis.session.Configuration configuration = xmlConfigBuilder.parse();
-
+    public ReactiveSqlSessionFactory createReactiveSqlSessionFactory(ConnectionFactory connectionFactory)  {
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         try {
             configuration.getTypeHandlerRegistry().register(RoundingMode.class, EnumOrdinalTypeHandler.class);
@@ -49,13 +46,13 @@ public class R2dbcAutoConfiguration{
 
     @Primary
     @Bean
-    public ReactiveSqlSession masterSqlSessionTemplate(ReactiveSqlSessionFactory sqlSessionFactory) {
+    public ReactiveSqlSession createMasterSqlSessionTemplate(ReactiveSqlSessionFactory sqlSessionFactory) {
         return sqlSessionFactory.openSession();
     }
 
     @Bean
     @ConditionalOnMissingBean(ReactiveTransactionManager.class)
-    public R2dbcTransactionManager connectionFactoryTransactionManager(ConnectionFactory connectionFactory) {
+    public R2dbcTransactionManager createConnectionFactoryTransactionManager(ConnectionFactory connectionFactory) {
         return new R2dbcTransactionManager(connectionFactory);
     }
 }
