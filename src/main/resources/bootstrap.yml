@@ -1,15 +1,16 @@
 server:
   port: 9000
+
 spring:
   application:
     name: webflux-mybatis
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/biz_channel?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: sqlzyydxe
     name: r2dbc
+    url: r2dbc:postgresql://ip:5432/db
+    username: user
+    password: test
     pool:
-      enabled: false #开启连接池（暂时不要开启连接池，超过后会阻塞）
+      enabled: true #开启连接池（暂时不要开启连接池，超过后会阻塞）
       validation-query: SELECT 1
       initial-size: 2 #初始连接数，默认10
       max-idle-time: 30 #允许连接在池中处于空闲状态的最长时间。
