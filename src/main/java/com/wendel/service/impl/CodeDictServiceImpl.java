@@ -4,8 +4,8 @@ import com.wendel.entity.CodeDict;
 import com.wendel.mapper.CodeDictReactiveMapper;
 import com.wendel.model.vo.CodeDictVo;
 import com.wendel.service.CodeDictService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -19,7 +19,7 @@ import reactor.core.publisher.Flux;
 @Service
 public class CodeDictServiceImpl implements CodeDictService {
 
-    @Autowired
+    @Resource
     private CodeDictReactiveMapper codeDictMapper;
 
 //    ReactiveSqlSession reactiveSqlSession;

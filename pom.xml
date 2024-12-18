@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.12.RELEASE</version>
+		<version>3.4.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.wendel</groupId>
@@ -15,11 +15,9 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<version.tk.mybatis>2.1.5</version.tk.mybatis>
-		<version.pagehelper>1.2.12</version.pagehelper>
+		<version.pagehelper>2.1.0</version.pagehelper>
 		<validation.version>2.0.1.Final</validation.version>
-		<spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+		<spring-cloud.version>2024.0.0</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -34,7 +32,7 @@
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>2.2.0</version>
+			<version>3.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ibatis</groupId>
@@ -49,10 +47,15 @@
 		</dependency>
 		-->
 		<!--mysql官方异步非阻塞驱动-->
-		<dependency>
+		<!--<dependency>
 			<groupId>dev.miku</groupId>
 			<artifactId>r2dbc-mysql</artifactId>
 			<version>0.8.2.RELEASE</version>
+		</dependency>-->
+		<dependency>
+			<groupId>io.r2dbc</groupId>
+			<artifactId>r2dbc-postgresql</artifactId>
+			<version>0.8.13.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -80,12 +83,12 @@
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>6.1.6.Final</version>
+			<version>8.0.2.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -124,13 +127,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-		</repository>
-	</repositories>
 
 </project>

@@ -6,13 +6,18 @@ import org.apache.ibatis.r2dbc.ReactiveSqlSession;
 import org.apache.ibatis.r2dbc.ReactiveSqlSessionFactory;
 import org.apache.ibatis.r2dbc.impl.DefaultReactiveSqlSessionFactory;
 import org.apache.ibatis.r2dbc.type.EnumOrdinalTypeHandler;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.data.r2dbc.connectionfactory.R2dbcTransactionManager;
+import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.transaction.ReactiveTransactionManager;
 
 import java.io.IOException;
@@ -25,6 +30,9 @@ import java.math.RoundingMode;
  * @create ：2020/11/27 17:16
  */
 @Configuration
+@ConditionalOnClass(ConnectionFactory.class)
+@AutoConfigureBefore(DataSourceAutoConfiguration.class)
+@EnableConfigurationProperties(R2dbcProperties.class)
 public class R2dbcAutoConfiguration{
     @Bean
     public ReactiveSqlSessionFactory createReactiveSqlSessionFactory(ConnectionFactory connectionFactory)  {

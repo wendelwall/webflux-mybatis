@@ -7,9 +7,9 @@ import com.wendel.model.vo.UserListVo;
 import com.wendel.model.vo.UserVo;
 import com.wendel.service.UserService;
 import com.wendel.utils.Result;
+import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -24,7 +24,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    @Resource
     UserMapper userMapper;
 
     /**

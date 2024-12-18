@@ -4,6 +4,7 @@ import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.support.WebExchangeBindException;
@@ -32,7 +33,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     private Map<String, Object> assembleError(ServerRequest request) {
         Map<String, Object> errorAttributes = new LinkedHashMap<>();
         Throwable error = getError(request);
-        Pair<HttpStatus, String> er = this.getErrorMsg(request);
+        Pair<HttpStatusCode, String> er = this.getErrorMsg(request);
         if (error instanceof ServerException) {
             errorAttributes.put("code", /*((ServerException) error).getCode().getCode()*/er.getFirst().value());
             errorAttributes.put("msg", er.getSecond());
@@ -51,14 +52,14 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
      * @param request
      * @return
      */
-    public Pair<HttpStatus, String> getErrorMsg(ServerRequest request) {
+    public Pair<HttpStatusCode, String> getErrorMsg(ServerRequest request) {
         Throwable error = getError(request);
         if (!(error instanceof WebExchangeBindException)) {
             return Pair.of(HttpStatus.INTERNAL_SERVER_ERROR, "系统错误");
         }
         List<ObjectError> errors = ((WebExchangeBindException) error).getBindingResult().getAllErrors();
         if (!errors.isEmpty()) {
-            return Pair.of(((WebExchangeBindException) error).getStatus(), errors.stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(";")));
+            return Pair.of(((WebExchangeBindException) error).getStatusCode(), errors.stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(";")));
         }
         return Pair.of(HttpStatus.INTERNAL_SERVER_ERROR, "系统错误");
     }

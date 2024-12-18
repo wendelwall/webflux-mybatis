@@ -2,7 +2,7 @@ package com.wendel.exception;
 
 import com.wendel.utils.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
@@ -29,10 +29,10 @@ import java.util.Map;
 public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
 
     public GlobalExceptionHandler(ErrorAttributes errorAttributes,
-                                  ResourceProperties resourceProperties,
+                                  WebProperties.Resources resources,
                                   ServerCodecConfigurer serverCodecConfigurer,
                                   ApplicationContext applicationContext){
-        super(errorAttributes, resourceProperties, applicationContext);
+        super(errorAttributes, resources, applicationContext);
         this.setMessageWriters(serverCodecConfigurer.getWriters());//配置messageWriters
     }
 
