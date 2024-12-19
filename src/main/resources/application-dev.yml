@@ -1,5 +1,6 @@
 server:
   port: 9000
+
 spring:
   r2dbc:
     url: r2dbc:postgresql://10.106.100.54:5432/bus_zgt?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai

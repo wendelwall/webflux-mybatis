@@ -1,17 +1,13 @@
 package com.wendel.config;
 
 import io.r2dbc.spi.ConnectionFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.r2dbc.ReactiveSqlSession;
 import org.apache.ibatis.r2dbc.ReactiveSqlSessionFactory;
 import org.apache.ibatis.r2dbc.impl.DefaultReactiveSqlSessionFactory;
 import org.apache.ibatis.r2dbc.type.EnumOrdinalTypeHandler;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,10 +25,8 @@ import java.math.RoundingMode;
  * @copyright ：	Copyright 2020 yowits Corporation. All rights reserved.
  * @create ：2020/11/27 17:16
  */
+@Slf4j
 @Configuration
-@ConditionalOnClass(ConnectionFactory.class)
-@AutoConfigureBefore(DataSourceAutoConfiguration.class)
-@EnableConfigurationProperties(R2dbcProperties.class)
 public class R2dbcAutoConfiguration{
     @Bean
     public ReactiveSqlSessionFactory createReactiveSqlSessionFactory(ConnectionFactory connectionFactory)  {
@@ -47,7 +41,7 @@ public class R2dbcAutoConfiguration{
                 configuration.addLoadedResource(resource.getFilename());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info("解析mybatis xml文件失败", e);
         }
         return new DefaultReactiveSqlSessionFactory(configuration, connectionFactory);
     }

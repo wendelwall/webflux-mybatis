@@ -3,13 +3,12 @@ package com.wendel;
 import com.wendel.scan.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 
 @EnableFeignClients(basePackages = "com.wendel")
 @MapperScan(basePackages = {"com.wendel.**.mapper"})
+@EnableR2dbcRepositories
 @SpringBootApplication
 public class WebfluxMybatisApplication {
 
