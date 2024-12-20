@@ -41,11 +41,6 @@ public class UserVo {
     private String password;
 
     /**
-     * 角色
-     */
-    private String roleId;
-
-    /**
      * 邮箱
      */
     private String email;
