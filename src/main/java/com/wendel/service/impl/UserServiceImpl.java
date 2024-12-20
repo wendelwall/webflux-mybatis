@@ -47,10 +47,9 @@ public class UserServiceImpl implements UserService {
         return userVo.flatMap(vo -> {
             User user = new User();
             BeanUtils.copyProperties(vo, user);
-            user.setStatus("1");
-            if(StringUtils.isNotBlank(vo.getPassword())){
+            if(StringUtils.isNotBlank(vo.getPwd())){
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String password = passwordEncoder.encode(vo.getPassword());
+                String password = passwordEncoder.encode(vo.getPwd());
                 user.setPassword(password);
             }
             user.buildForInsert();
@@ -69,9 +68,9 @@ public class UserServiceImpl implements UserService {
     public Mono<Result<Void>> update(Mono<UserVo> userVo) {
         return userVo.zipWhen(p -> userMapper.getById(p.getId()), (vo, user) -> {
             user.setUserName(vo.getUserName());
-            if(StringUtils.isNotBlank(vo.getPassword())){
+            if(StringUtils.isNotBlank(vo.getPwd())){
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String password = passwordEncoder.encode(vo.getPassword());
+                String password = passwordEncoder.encode(vo.getPwd());
                 user.setPassword(password);
             }
             user.setMobile(vo.getMobile());

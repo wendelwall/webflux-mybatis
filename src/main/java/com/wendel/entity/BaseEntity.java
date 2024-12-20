@@ -56,7 +56,7 @@ public class BaseEntity implements Serializable {
      */
     @JsonIgnore
     @Column(name = "DELETE_FLAG")
-    private Boolean deleteFlag;
+    private String deleteFlag;
 
     public BaseEntity buildForInsert() {
         if (StringUtils.isBlank(this.id)) {
@@ -76,7 +76,7 @@ public class BaseEntity implements Serializable {
         }
 
         if (this.deleteFlag == null) {
-            this.setDeleteFlag(false);
+            this.setDeleteFlag("0");
         }
 
         return this;

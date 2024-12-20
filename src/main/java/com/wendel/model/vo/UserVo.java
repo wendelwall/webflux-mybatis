@@ -38,12 +38,7 @@ public class UserVo {
      * 密码
      */
     @NotBlank(message = "密码不能为空")
-    private String password;
-
-    /**
-     * 角色
-     */
-    private String roleId;
+    private String pwd;
 
     /**
      * 邮箱

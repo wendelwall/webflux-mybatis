@@ -44,8 +44,9 @@ public class SqlMapperScanner extends ClassPathBeanDefinitionScanner {
 
     protected void registerFilters() {
         this.addIncludeFilter((metadataReader, metadataReaderFactory) -> {
-            if (metadataReader.getClassMetadata().isInterface())
+            if (metadataReader.getClassMetadata().isInterface()) {
                 return true;
+            }
             return false;
         });
     }
